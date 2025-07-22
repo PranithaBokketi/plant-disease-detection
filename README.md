@@ -50,15 +50,23 @@ Detect and classify plant diseases from leaf images using a CNN model built with
 ## Project Structure
 
 plant-disease-detection/
-│
-├── PlantVillage/             # Raw dataset
-├── train/                    # Training images
-├── val/                      # Validation images
-├── plant_disease.py          # Model training code
-├── app.py                    # Streamlit GUI
-├── split_data.py             # Script to split dataset
-├── plant_disease_model.h5    # Trained CNN model
-└── README.txt                # Project overview
+
+
+ PlantVillage/             # Raw dataset
+ 
+ train/                    # Training images
+ 
+ val/                      # Validation images
+ 
+ plant_disease.py          # Model training code
+ 
+ app.py                    # Streamlit GUI
+ 
+ split_data.py             # Script to split dataset
+ 
+ plant_disease_model.h5    # Trained CNN model
+ 
+ README.txt                # Project overview
 
 
 ## How to Run
@@ -77,4 +85,5 @@ plant-disease-detection/
 
 
  Author
+ 
 Bokketi Pranitha
