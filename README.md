@@ -54,9 +54,6 @@ plant-disease-detection/
 
  PlantVillage/             # Raw dataset
  
- train/                    # Training images
- 
- val/                      # Validation images
  
  plant_disease.py          # Model training code
  
