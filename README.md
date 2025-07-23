@@ -80,6 +80,13 @@ plant-disease-detection/
 
    streamlit run app.py
 
+##  Demo Video
+
+Watch the video demo of the Plant Disease Detection project:
+
+ [Click to watch the demo](https://www.loom.com/share/b6d01347b3e143cb9711d04f5416a15f?sid=4927af9e-2b46-4f4d-b72a-845ceca379a8)
+
+
 
  Author
  
