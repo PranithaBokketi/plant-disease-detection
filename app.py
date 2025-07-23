@@ -1,42 +1,60 @@
-# ---------------------------------------------
-# Streamlit GUI for Plant Disease Detection
-# Author: Bokketi Pranitha
-# This app uses a trained CNN (Keras with TensorFlow)
-# to classify plant leaf diseases from uploaded images.
-# ---------------------------------------------
-
 import streamlit as st
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import numpy as np
+from PIL import Image
+from tensorflow.keras.models import load_model
 import os
 
-# Load the trained model
-model = load_model("plant_disease_model.h5")
+# Title and description
+st.set_page_config(page_title="Plant Disease Detection", layout="centered")
+st.title(" Plant Disease Detection")
+st.write("Upload a leaf image to detect plant diseases using a CNN model built with Keras.")
 
-# Class names (adjust based on your dataset)
-class_names = ['Tomato_Healthy', 'Tomato_Bacterial_spot', 'Tomato_Early_blight', 'Tomato_Late_blight', 'Potato_Healthy']
+# Load the model
+@st.cache_resource
+def load_cnn_model():
+    try:
+        model = load_model("plant_disease_model.h5")
+        return model
+    except Exception as e:
+        st.error(f" Error loading model: {e}")
+        return None
 
-# Streamlit UI
-st.set_page_config(page_title="🌿 Plant Disease Detector", layout="centered")
-st.title("🌱 Plant Disease Detection from Leaf Image")
+model = load_cnn_model()
 
-uploaded_file = st.file_uploader("Upload a Leaf Image", type=["jpg", "jpeg", "png"])
+# Class names - ensure this matches your training classes
+class_names = ['Apple Scab', 'Apple Black Rot', 'Corn Gray Leaf Spot', 'Healthy', 'Potato Early Blight', 'Potato Late Blight']  # example classes
+
+# File uploader
+uploaded_file = st.file_uploader(" Upload Leaf Image", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
-    image = load_img(uploaded_file, target_size=(128, 128))  # same size used during training
-   
-    st.image(image, caption='Uploaded Leaf Image', use_container_width=True)
+    try:
+        # Load and display image
+        image = Image.open(uploaded_file).convert('RGB')
+        st.image(image, caption="Uploaded Leaf Image", use_container_width=True)
 
-    # Preprocess the image
-    img_array = img_to_array(image) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
+        # Preprocess
+        
 
-    # Make prediction
-    prediction = model.predict(img_array)
-    predicted_class = class_names[np.argmax(prediction)]
-    confidence = np.max(prediction)
+        img = image.resize((128, 128))  # match the model's expected input
+        img_array = np.array(img) / 255.0
+        img_array = np.expand_dims(img_array, axis=0)  # shape becomes (1, 128, 128, 3)
 
-    # Show result
-    st.success(f"Prediction: **{predicted_class}**")
-    st.info(f"Confidence: {confidence:.2f}")
+
+
+        # Predict
+        prediction = model.predict(img_array)
+
+        if prediction is not None and prediction.shape[0] > 0:
+            predicted_class = class_names[np.argmax(prediction[0])]
+            confidence = np.max(prediction[0]) * 100
+            st.success(f" Predicted: **{predicted_class}** with {confidence:.2f}% confidence.")
+        else:
+            st.warning("⚠️ Unable to make a prediction. Try a different image.")
+
+    except Exception as e:
+        st.error(f"Error during prediction: {e}")
+
+# Footer
+st.markdown("---")
+st.markdown("Made with love by pranitha pranay  using CNN & Streamlit")
